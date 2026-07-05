@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Welcome Back ❤️</title>
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #3d1b32 0%, #150a1a 100%);
+            --glass-bg: rgba(255, 255, 255, 0.06);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --gold-border: rgba(212, 175, 55, 0.45);
+            --text-main: #ffffff;
+            --text-sub: #e2d5e7;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #150a1a;
+            color: var(--text-main);
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Optimized Device Viewport (iPhone 17 Ultra-Tall Ratio) */
+        .phone-viewport {
+            width: 100%;
+            max-width: 412px;
+            height: 100%;
+            max-height: 892px;
+            background: var(--bg-gradient);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7);
+        }
+
+        @media (min-width: 450px) {
+            .phone-viewport {
+                border-radius: 44px;
+                border: 10px solid #25132a;
+                height: 94vh;
+            }
+        }
+
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(25px);
+            transition: opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1), transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+            padding: 50px 28px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            z-index: 1;
+        }
+
+        .screen.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+            z-index: 2;
+        }
+
+        h1 {
+            font-family: "Georgia", serif;
+            font-size: 2.6rem;
+            margin-bottom: 16px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            line-height: 1.2;
+        }
+
+        p.subtitle {
+            font-size: 1.1rem;
+            color: var(--text-sub);
+            margin-bottom: 44px;
+            line-height: 1.5;
+        }
+
+        /* Glassmorphic Interaction Controls */
+        .btn {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            padding: 18px 32px;
+            border-radius: 18px;
+            color: var(--text-main);
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            max-width: 290px;
+            transition: background 0.3s, transform 0.2s, border-color 0.3s;
+            margin-bottom: 16px;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .btn:active {
+            transform: scale(0.96);
+            background: rgba(255, 255, 255, 0.14);
+        }
+
+        .btn-gold {
+            border-color: rgba(212, 175, 55, 0.45);
+            background: rgba(212, 175, 55, 0.07);
+        }
+
+        /* Screen 2 Absolute Position Stack Container */
+        .button-stack {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            height: 270px;
+            margin-top: 20px;
+        }
+
+        #no-btn {
+            position: absolute;
+            transition: all 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+            z-index: 10;
+            top: 80px;
+        }
+
+        /* Error Alert Banner Box */
+        .alert-banner {
+            background: rgba(239, 68, 68, 0.18);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: #ff9494;
+            padding: 16px;
+            border-radius: 14px;
+            width: 100%;
+            max-width: 290px;
+            margin-top: 18px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            opacity: 0;
+            transform: scale(0.92);
+            transition: all 0.25s ease;
+            display: none;
+        }
+
+        .alert-banner.show {
+            display: block;
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Submenu Selector Design Matrix */
+        .submenu-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            width: 100%;
+            max-width: 290px;
+            margin-top: 10px;
+        }
+
+        .submenu-grid .btn {
+            margin-bottom: 0;
+            padding: 14px;
+            font-size: 0.95rem;
+        }
+
+        /* Clean Memory Scroller Timeline */
+        .scroll-container {
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            padding: 20px 0 90px 0;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .scroll-container::-webkit-scrollbar {
+            width: 0px;
+            background: transparent;
+        }
+
+        .memory-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            border-radius: 26px;
+            padding: 18px;
+            margin-bottom: 36px;
+            width: 100%;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.35);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .img-wrapper {
+            width: 100%;
+            border-radius: 18px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(0, 0, 0, 0.25);
+        }
+
+        .img-wrapper img {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: cover;
+        }
+
+        .caption {
+            margin-top: 16px;
+            font-size: 1rem;
+            color: var(--text-sub);
+            font-style: italic;
+            text-align: center;
+            line-height: 1.4;
+            padding: 0 6px;
+        }
+
+        /* Heart Confetti Target Element Overlay */
+        #confetti-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="phone-viewport">
+        <canvas id="confetti-canvas"></canvas>
+
+        <div class="screen active" id="screen-1">
+            <h1>Hello.</h1>
+            <p class="subtitle">Welcome back to Delhi ❤️</p>
+            <button class="btn" onclick="nextScreen(2)">Open ❤️</button>
+        </div>
+
+        <div class="screen" id="screen-2">
+            <h1>I love you.</h1>
+            <p class="subtitle">do you Love me?</p>
+            <div class="button-stack">
+                <button class="btn" onclick="triggerLoveConfirmation()">yes</button>
+                <button class="btn" id="no-btn">no</button>
+                <button class="btn" onclick="triggerLoveConfirmation()" style="position: absolute; top: 160px;">yes</button>
+            </div>
+        </div>
+
+        <div class="screen" id="screen-2-5">
+            <h1 style="font-size: 2.3rem; line-height: 1.3;">I knew it! <br><span style="color: #ff4d6d;">Love you too. ❤️</span></h1>
+        </div>
+
+        <div class="screen" id="screen-3">
+            <h1 style="font-size: 1.9rem; margin-bottom: 10px;">I am waiting for your reply in person...</h1>
+            <p class="subtitle" style="margin-bottom: 28px;">so when are you going to give me?</p>
+            
+            <div id="main-options" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+                <button class="btn" onclick="selectPath('half-day')">Take a half day.</button>
+                <button class="btn" onclick="selectPath('office-ride')">Will meet after office till home ride.</button>
+                <button class="btn" onclick="selectPath('chat-loop')">Already told you in chat</button>
+            </div>
+
+            <div id="path-half-day" style="display: none; width: 100%; flex-direction: column; align-items: center;">
+                <p class="subtitle" style="color: #fff; margin-bottom: 30px;"><strong>Perfect.</strong> Let's meet this <strong>Saturday, 12 July</strong>! ✨</p>
+                <button class="btn btn-gold" onclick="nextScreen(4)">View Memories ✨</button>
+            </div>
+
+            <div id="path-office-ride" style="display: none; width: 100%; flex-direction: column; align-items: center;">
+                <p class="subtitle" style="margin-bottom: 18px; font-size: 1.05rem;">Pick a weekday target:</p>
+                <div class="submenu-grid">
+                    <button class="btn" onclick="confirmWeekday('Monday')">Monday</button>
+                    <button class="btn" onclick="confirmWeekday('Tuesday')">Tuesday</button>
+                    <button class="btn" onclick="confirmWeekday('Wednesday')">Wednesday</button>
+                    <button class="btn" onclick="confirmWeekday('Thursday')">Thursday</button>
+                    <button class="btn" onclick="confirmWeekday('Friday')">Friday</button>
+                </div>
+            </div>
+
+            <div id="path-office-confirmed" style="display: none; width: 100%; flex-direction: column; align-items: center;">
+                <p class="subtitle" style="color: #fff; margin-bottom: 30px;">It's a date! See you after office. 🥰</p>
+                <button class="btn btn-gold" onclick="nextScreen(4)">View Memories ✨</button>
+            </div>
+
+            <div class="alert-banner" id="error-banner">❌ Error: Invalid answer!</div>
+        </div>
+
+        <div class="screen" id="screen-4" style="padding: 20px 18px; justify-content: flex-start;">
+            <div class="scroll-container">
+                <h1 style="font-size: 2rem; margin: 15px 0 25px 0; font-family: 'Georgia', serif;">Our Captured Loops</h1>
+                
+                <div class="memory-card">
+                    <div class="img-wrapper">
+                        <img src="photo-1.jpg" alt="Memory 1">
+                    </div>
+                    <div class="caption">favourite recent photo of you</div>
+                </div>
+
+                <div class="memory-card">
+                    <div class="img-wrapper">
+                        <img src="photo-2.jpg" alt="Memory 2">
+                    </div>
+                    <div class="caption">first photo of Delhi</div>
+                </div>
+
+                <div class="memory-card">
+                    <div class="img-wrapper">
+                        <img src="photo-3.jpg" alt="Memory 3">
+                    </div>
+                    <div class="caption">best snap of yours</div>
+                </div>
+
+                <div class="memory-card">
+                    <div class="img-wrapper">
+                        <img src="photo-4.jpg" alt="Memory 4">
+                    </div>
+                    <div class="caption">best memory to remember</div>
+                </div>
+
+                <div class="memory-card">
+                    <div class="img-wrapper">
+                        <img src="photo-5.jpg" alt="Memory 5">
+                    </div>
+                    <div class="caption">A photo Together</div>
+                </div>
+
+                <button class="btn btn-gold" id="finalize-btn" onclick="lockInLoop()" style="margin-top: 15px; max-width: 100%;">Lock in Our Loop ❤️</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Track choices behind the scenes
+        let userResponses = {
+            lovedMe: "Yes",
+            meetingPreference: ""
+        };
+
+        // Core Viewport Navigation Transitions Machine
+        function nextScreen(screenNum) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(`screen-${screenNum}`).classList.add('active');
+        }
+
+        // Fast Path Interstitial Display Trigger
+        function triggerLoveConfirmation() {
+            userResponses.lovedMe = "Yes";
+            nextScreen('2-5');
+            setTimeout(() => {
+                nextScreen(3);
+            }, 2500);
+        }
+
+        // Advanced Abs-Position Evasion "No" Button Core
+        const noBtn = document.getElementById('no-btn');
+        const container = document.querySelector('.button-stack');
+
+        function moveDodgeTarget() {
+            const containerW = container.clientWidth;
+            const containerH = container.clientHeight;
+            const targetW = noBtn.clientWidth;
+            const targetH = noBtn.clientHeight;
+
+            const targetX = Math.floor(Math.random() * (containerW - targetW));
+            const targetY = Math.floor(Math.random() * (containerH - targetH));
+
+            noBtn.style.left = `${targetX}px`;
+            noBtn.style.top = `${targetY}px`;
+        }
+
+        noBtn.addEventListener('mouseenter', moveDodgeTarget);
+        noBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            moveDodgeTarget();
+        });
+
+        // Screen 3 Menu Choice Routers
+        function selectPath(selectedRoute) {
+            const mainOptions = document.getElementById('main-options');
+            const errorBanner = document.getElementById('error-banner');
+
+            if (selectedRoute === 'half-day') {
+                userResponses.meetingPreference = "Take a half day (Saturday, 12 July)";
+                mainOptions.style.display = 'none';
+                document.getElementById('path-half-day').style.display = 'flex';
+            } else if (selectedRoute === 'office-ride') {
+                mainOptions.style.display = 'none';
+                document.getElementById('path-office-ride').style.display = 'flex';
+            } else if (selectedRoute === 'chat-loop') {
+                errorBanner.classList.add('show');
+                setTimeout(() => {
+                    errorBanner.classList.remove('show');
+                }, 1500);
+            }
+        }
+
+        function confirmWeekday(day) {
+            userResponses.meetingPreference = `After office ride on a ${day}`;
+            document.getElementById('path-office-ride').style.display = 'none';
+            document.getElementById('path-office-confirmed').style.display = 'flex';
+        }
+
+        // Auto email submission via Formspree
+        function sendResponsesToEmail() {
+            const formspreeId = 'xeebnlzz'; 
+
+            fetch(`https://formspree.io/f/${formspreeId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    "Do you love me?": userResponses.lovedMe,
+                    "When to meet?": userResponses.meetingPreference
+                })
+            }).catch(err => console.error("Data tracking error:", err));
+        }
+
+        // Custom Canvas Engine Particle System (Heart Rains)
+        const canvas = document.getElementById('confetti-canvas');
+        const ctx = canvas.getContext('2d');
+        let frameTracker;
+        let elementsArray = [];
+
+        function setViewportMatrix() {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+        }
+
+        class HeartParticleItem {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * -canvas.height;
+                this.size = Math.random() * 8 + 10;
+                this.yVelocity = Math.random() * 2.5 + 2;
+                this.xVelocity = Math.sin(Math.random() * 2) * 1;
+                this.color = Math.random() > 0.45 ? '#ff4d6d' : '#ffccd5';
+                this.opacity = Math.random() * 0.5 + 0.5;
+            }
+
+            render() {
+                ctx.save();
+                ctx.globalAlpha = this.opacity;
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.moveTo(this.x, this.y);
+                ctx.bezierCurveTo(this.x - this.size / 2, this.y - this.size / 2, this.x - this.size, this.y + this.size / 3, this.x, this.y + this.size);
+                ctx.bezierCurveTo(this.x + this.size, this.y + this.size / 3, this.x + this.size / 2, this.y - this.size / 2, this.x, this.y);
+                ctx.fill();
+                ctx.restore();
+            }
+
+            advance() {
+                this.y += this.yVelocity;
+                this.x += this.xVelocity;
+                if (this.y > canvas.height) {
+                    this.y = -15;
+                    this.x = Math.random() * canvas.width;
+                }
+            }
+        }
+
+        function executeEngineLoop() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            elementsArray.forEach(element => {
+                element.advance();
+                element.render();
+            });
+            frameTracker = requestAnimationFrame(executeEngineLoop);
+        }
+
+        function lockInLoop() {
+            setViewportMatrix();
+            window.addEventListener('resize', setViewportMatrix);
+            elementsArray = Array.from({ length: 50 }, () => new HeartParticleItem());
+            executeEngineLoop();
+            
+            // Dispatch choice metrics straight to your inbox
+            sendResponsesToEmail();
+            
+            const finalBtn = document.getElementById('finalize-btn');
+            finalBtn.innerHTML = "Our Loop is Locked! 💖";
+            finalBtn.style.background = "rgba(212, 175, 55, 0.22)";
+            finalBtn.disabled = true;
+        }
+    </script>
+</body>
+</html>
